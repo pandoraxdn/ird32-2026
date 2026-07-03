@@ -5,7 +5,7 @@ from db.database import Base
 
 class Usuario(Base):
     __tablename__ = "usuarios"
-    id = Column(Integer, primary_key=True, index=True)
+    id_usuario = Column(Integer, primary_key=True, index=True)
     nombre = Column(String(100), nullable=False)
     email = Column(String(100), unique=True, nullable=False)
     telefono = Column(String(20), nullable=True)
@@ -17,7 +17,7 @@ class Usuario(Base):
 
 class Producto(Base):
     __tablename__ = "productos"
-    id = Column(Integer, primary_key=True, index=True)
+    id_producto = Column(Integer, primary_key=True, index=True)
     nombre = Column(String(150), nullable=False)
     descripcion = Column(String(500), nullable=True)
     categoria = Column(String(50), nullable=True)
@@ -31,8 +31,8 @@ class Producto(Base):
 
 class Pedido(Base):
     __tablename__ = "pedidos"
-    id = Column(Integer, primary_key=True, index=True)
-    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    id_pedido = Column(Integer, primary_key=True, index=True)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
     fecha_pedido = Column(DateTime, default=datetime.now())
     estado = Column(String(50), default="PENDIENTE")
     metodo_pago = Column(String(50), nullable=True)
@@ -44,9 +44,9 @@ class Pedido(Base):
 
 class DetallePedido(Base):
     __tablename__ = "detalles_pedido"
-    id = Column(Integer, primary_key=True, index=True)
-    pedido_id = Column(Integer, ForeignKey("pedidos.id"), nullable=False)
-    producto_id = Column(Integer, ForeignKey("productos.id"), nullable=False)
+    id_detalle_producto = Column(Integer, primary_key=True, index=True)
+    pedido_id = Column(Integer, ForeignKey("pedidos.id_pedido"), nullable=False)
+    producto_id = Column(Integer, ForeignKey("productos.id_producto"), nullable=False)
     cantidad = Column(Integer, nullable=False)
     precio_unitario = Column(Float, nullable=False)
     descuento_aplicado = Column(Float, default=0.0)
