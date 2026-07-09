@@ -10,7 +10,7 @@ class Usuario(Base):
     email = Column(String(100), unique=True, nullable=False)
     telefono = Column(String(20), nullable=True)
     direccion = Column(String(200), nullable=True)
-    fecha_nacimiento = Column(Date, nullable=True)
+    fecha_nacimiento = Column(String(200), nullable=True)
     activo = Column(Boolean, default=True)
     registrado_en = Column(DateTime, default=datetime.now())
     pedidos = relationship("Pedido", back_populates="usuario", cascade="all, delete")

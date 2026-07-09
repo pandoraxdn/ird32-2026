@@ -6,4 +6,4 @@ DATABASE_URL = 'postgresql://najimi:pass@localhost:5432/ird32'
 
 Engine = create_engine(DATABASE_URL,echo=True)
 Base = declarative_base()
-Sesion = sessionmaker(autocommit=True,autoflush=True,bind=Engine)
+Sesion = sessionmaker(autoflush=True,bind=Engine)

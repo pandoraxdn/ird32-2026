@@ -10,15 +10,19 @@ def crear_usuario(nombre, email, telefono, direccion, fecha_nacimiento, activo=T
             telefono = telefono,
             direccion = direccion,
             fecha_nacimiento = fecha_nacimiento,
-            activo = activo)
+            activo = activo
+        )
         db.add(registro)
-        db.refresh(registro)
+        db.commit() 
+        db.refresh(registro) 
         return registro
     except Exception as e:
-        raise e
+        db.rollback()
+        print(f"Error al crear usuario: {e}")
+        return None          
     finally:
-        db.close()
-        
+        db.close()       
+
 def buscar_usuario_id(id_usuario):
     db = Sesion()
     try:
@@ -31,9 +35,11 @@ def buscar_usuario_id(id_usuario):
 def lista_usuarios():
     db = Sesion()
     try:
-        return db.query(Usuario).all()
+        users = db.query(Usuario).all()
+        return users
     except Exception as e:
-        raise e
+        print(f"Error: {e}")
+        return None
     finally:
         db.close()
         
@@ -41,15 +47,16 @@ def actualizar_usuario(id_usuario, nombre, email, telefono, direccion, fecha_nac
     db = Sesion()
     try:
         usuario = db.query(Usuario).filter(Usuario.id_usuario == id_usuario).first()
-        usuario.nombre = nombre
-        usuario.email = email
-        usuario.telefono = telefono
-        usuario.direccion = direccion
-        usuario.fecha_nacimiento = fecha_nacimiento
-        usuario.activo = activo
-        db.commit()
-        db.refresh(usuario)
-        return usuario
+        if usuario:
+            usuario.nombre = nombre
+            usuario.email = email
+            usuario.telefono = telefono
+            usuario.direccion = direccion
+            usuario.fecha_nacimiento = fecha_nacimiento
+            usuario.activo = activo
+            db.commit()
+            db.refresh(usuario)
+            return usuario
     except Exception as e:
         raise e
     finally:
