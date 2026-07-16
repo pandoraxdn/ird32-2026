@@ -1,5 +1,5 @@
 from datetime import datetime, date
-from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, Date, ForeignKey
+from sqlalchemy import Column, Integer, String, Float, DateTime, Boolean, Date, ForeignKey, func
 from sqlalchemy.orm import relationship
 from db.database import Base
 
@@ -10,9 +10,9 @@ class Usuario(Base):
     email = Column(String(100), unique=True, nullable=False)
     telefono = Column(String(20), nullable=True)
     direccion = Column(String(200), nullable=True)
-    fecha_nacimiento = Column(String(200), nullable=True)
+    fecha_nacimiento = Column(Date, nullable=True)
     activo = Column(Boolean, default=True)
-    registrado_en = Column(DateTime, default=datetime.now())
+    registrado_en = Column(DateTime, server_default=func.now())
     pedidos = relationship("Pedido", back_populates="usuario", cascade="all, delete")
 
 class Producto(Base):
@@ -26,14 +26,14 @@ class Producto(Base):
     stock = Column(Integer, nullable=False)
     peso_kg = Column(Float, nullable=True)
     dimensiones = Column(String(50), nullable=True)
-    fecha_alta = Column(Date, default=date.today)
+    fecha_alta = Column(Date, server_default=func.current_date())
     detalles = relationship("DetallePedido", back_populates="producto")
 
 class Pedido(Base):
     __tablename__ = "pedidos"
     id_pedido = Column(Integer, primary_key=True, index=True)
     usuario_id = Column(Integer, ForeignKey("usuarios.id_usuario"), nullable=False)
-    fecha_pedido = Column(DateTime, default=datetime.now())
+    fecha_pedido = Column(DateTime, server_default=func.now())
     estado = Column(String(50), default="PENDIENTE")
     metodo_pago = Column(String(50), nullable=True)
     fecha_entrega = Column(Date, nullable=True)
